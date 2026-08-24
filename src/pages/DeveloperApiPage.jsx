@@ -32,6 +32,7 @@ export default function DeveloperApiPage() {
 
   useEffect(() => {
     refresh().catch((e) => toast.error(e.message)).finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount
   }, []);
 
   function setIp(list, setter, index, value) {

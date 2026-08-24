@@ -99,6 +99,7 @@ export default function LedgerPage() {
 
   useEffect(() => {
     refresh(1).catch((e) => toast.error(e.message)).finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount
   }, []);
 
   if (loading) return <PageSkeleton cols={7} />;

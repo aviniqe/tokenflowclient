@@ -102,6 +102,7 @@ export default function DepositPage() {
 
   useEffect(() => {
     refresh().catch((e) => toast.error(e.message)).finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount
   }, []);
 
   const ranges = rangeList(info?.deposit_fee_ranges);

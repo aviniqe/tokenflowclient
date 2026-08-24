@@ -51,6 +51,7 @@ export default function WithdrawalsPage() {
 
   useEffect(() => {
     refresh().catch((e) => toast.error(e.message));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount
   }, []);
 
   function askSubmit(e) {
