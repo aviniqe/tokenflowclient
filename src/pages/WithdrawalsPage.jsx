@@ -4,7 +4,7 @@ import { HiOutlineArrowPath, HiOutlinePaperAirplane } from 'react-icons/hi2';
 import { api } from '../api.js';
 import { formatAmount } from '../formatAmount.js';
 import { formatWhen } from '../formatWhen.js';
-import { sanitizeIntegerAmount } from '../integerAmount.js';
+import { sanitizeDecimalAmount } from '../integerAmount.js';
 import Pagination from '../components/Pagination.jsx';
 import ConfirmDialog from '../components/ConfirmDialog.jsx';
 import { FormSkeleton, TableSkeleton } from '../components/Skeleton.jsx';
@@ -96,7 +96,7 @@ export default function WithdrawalsPage() {
         <div>
           <h1>Withdraw USDT</h1>
           <p>
-            Enter any BSC address that can receive BEP-20 USDT. The full requested amount is paid. There is no withdrawal fee and no daily cap.
+            The full requested amount is paid, including decimals such as 10.10, as long as it is within the min and max withdrawal limits. There is no withdrawal fee and no daily cap.
           </p>
         </div>
         <button
@@ -130,10 +130,9 @@ export default function WithdrawalsPage() {
               <label>Amount (USDT)</label>
               <input
                 value={form.amount}
-                onChange={(e) => setForm({ ...form, amount: sanitizeIntegerAmount(e.target.value) })}
-                placeholder="25"
-                inputMode="numeric"
-                pattern="[1-9][0-9]*"
+                onChange={(e) => setForm({ ...form, amount: sanitizeDecimalAmount(e.target.value) })}
+                placeholder="10.10"
+                inputMode="decimal"
                 required
               />
             </div>

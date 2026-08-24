@@ -65,7 +65,8 @@ export default function DeveloperApiReferencePage() {
           <p>
             Use your live API token from the{' '}
             <Link to="/developer">API tokens</Link> page. All calls are BEP-20 USDT on
-            BNB Smart Chain (BSC mainnet). Amounts must be whole numbers (no decimals).
+            BNB Smart Chain (BSC mainnet). Payout amounts may include decimals (for example 10.10)
+            within min/max. Deposit ticket amounts stay whole numbers.
           </p>
         </div>
       </div>
@@ -331,7 +332,7 @@ export default function DeveloperApiReferencePage() {
               <tr>
                 <td className="mono">amount</td>
                 <td>Yes</td>
-                <td>Integer USDT string within configured min/max</td>
+                <td>USDT string within configured min/max, decimals allowed (e.g. <code>"10.10"</code>)</td>
               </tr>
               <tr>
                 <td className="mono">idempotency_key</td>
