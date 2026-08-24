@@ -1,8 +1,8 @@
 export const PASSWORD_POLICY =
-  'At least 12 characters, with uppercase, lowercase, a number, and a symbol.';
+  'At least 8 characters, with uppercase, lowercase, a number, and a symbol.';
 
 export const PASSWORD_RULES = [
-  { id: 'len', label: 'At least 12 characters', test: (value) => value.length >= 12 },
+  { id: 'len', label: 'At least 8 characters', test: (value) => value.length >= 8 },
   { id: 'lower', label: 'One lowercase letter', test: (value) => /[a-z]/.test(value) },
   { id: 'upper', label: 'One uppercase letter', test: (value) => /[A-Z]/.test(value) },
   { id: 'digit', label: 'One number', test: (value) => /\d/.test(value) },
