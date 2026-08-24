@@ -35,7 +35,7 @@ const titles = {
   '/deposit': ['Deposit', 'Send USDT and request credit'],
   '/ledger': ['Ledger', 'Fund credits and withdrawal debits'],
   '/withdrawals': ['Withdrawals', 'Request a USDT payout'],
-  '/developer': ['API', 'Withdrawal tokens and IP whitelist'],
+  '/developer': ['API', 'Withdrawal tokens'],
   '/developer/reference': ['API docs', 'Developer payout and deposit API'],
 };
 

@@ -66,7 +66,7 @@ export default function DashboardPage() {
       <div className="panel">
         <h2 style={{ margin: '0 0 8px', fontSize: 18 }}>Withdrawal API</h2>
         <p className="muted" style={{ margin: '0 0 14px' }}>
-          Create API tokens, whitelist IPs, and request payouts from your own systems.
+          Create API tokens and request payouts from your own systems.
         </p>
         <div className="btn-row">
           <Link className="btn-primary" to="/developer">Manage API tokens</Link>

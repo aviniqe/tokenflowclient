@@ -93,7 +93,6 @@ export default function DeveloperApiReferencePage() {
         </p>
         <p className="muted">
           Send the token on every request. Tokens are shown only once when you create them.
-          If you set an IP whitelist on the token, requests from other IPs are rejected.
         </p>
         <div className="table-wrap">
           <table>
@@ -148,7 +147,7 @@ export default function DeveloperApiReferencePage() {
               </tr>
               <tr>
                 <td>403</td>
-                <td>Account inactive, or request IP is not on the token whitelist</td>
+                <td>Account is not active</td>
               </tr>
               <tr>
                 <td>400</td>
