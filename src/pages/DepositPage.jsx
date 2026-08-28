@@ -8,7 +8,9 @@ import { formatWhen } from '../formatWhen.js';
 import { sanitizeIntegerAmount } from '../integerAmount.js';
 import Pagination from '../components/Pagination.jsx';
 import ConfirmDialog from '../components/ConfirmDialog.jsx';
+import Modal from '../components/Modal.jsx';
 import { FormSkeleton, TableSkeleton } from '../components/Skeleton.jsx';
+import { HiOutlineEye } from 'react-icons/hi2';
 
 const PAGE_SIZE = 10;
 
@@ -81,6 +83,13 @@ function hashError(hash, submitted) {
   return '';
 }
 
+function ellipsizeTx(value) {
+  const text = String(value || '').trim();
+  if (!text) return '—';
+  if (text.length <= 14) return text;
+  return `${text.slice(0, 5)}.....${text.slice(-6)}`;
+}
+
 export default function DepositPage() {
   const [info, setInfo] = useState(null);
   const [rows, setRows] = useState([]);
@@ -90,6 +99,7 @@ export default function DepositPage() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [selected, setSelected] = useState(null);
 
   async function refresh() {
     const [addressRes, loadsRes] = await Promise.all([
@@ -176,7 +186,7 @@ export default function DepositPage() {
       {loading ? (
         <>
           <FormSkeleton fields={3} />
-          <TableSkeleton cols={8} />
+          <TableSkeleton cols={9} />
         </>
       ) : (
         <>
@@ -299,6 +309,7 @@ export default function DepositPage() {
                   <th>Status</th>
                   <th>Submitted</th>
                   <th>Tx</th>
+                  <th>Details</th>
                 </tr>
               </thead>
               <tbody>
@@ -311,7 +322,12 @@ export default function DepositPage() {
                     <td>{formatAmount(row.credited_amount)}</td>
                     <td><span className={`badge ${row.status}`}>{row.status}</span></td>
                     <td className="muted">{formatWhen(row.created_at)}</td>
-                    <td className="mono">{row.deposit_tx_hash || '—'}</td>
+                    <td className="mono" title={row.deposit_tx_hash || ''}>{ellipsizeTx(row.deposit_tx_hash)}</td>
+                    <td>
+                      <button className="btn-ghost" type="button" onClick={() => setSelected(row)}>
+                        <HiOutlineEye /> Details
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -372,6 +388,82 @@ export default function DepositPage() {
           </div>
         </div>
       </ConfirmDialog>
+
+      <Modal
+        open={Boolean(selected)}
+        title={selected ? `Deposit #${selected.id}` : 'Deposit details'}
+        subtitle={selected ? `${formatWhen(selected.created_at)} · ${formatAmount(selected.amount)} USDT` : ''}
+        onClose={() => setSelected(null)}
+        wide
+      >
+        {selected ? (
+          <div className="kv-grid">
+            <div className="kv">
+              <span>Status</span>
+              <strong><span className={`badge ${selected.status}`}>{selected.status}</span></strong>
+            </div>
+            <div className="kv">
+              <span>Token</span>
+              <strong>{selected.token || 'USDT'}</strong>
+            </div>
+            <div className="kv">
+              <span>Amount sent</span>
+              <strong>{formatAmount(selected.amount)} USDT</strong>
+            </div>
+            <div className="kv">
+              <span>Fee</span>
+              <strong>
+                {selected.fee_amount != null
+                  ? `${formatAmount(selected.fee_amount)} USDT (${formatAmount(selected.fee_percent)}%)`
+                  : '—'}
+              </strong>
+            </div>
+            <div className="kv">
+              <span>Credited</span>
+              <strong>{selected.credited_amount != null ? `${formatAmount(selected.credited_amount)} USDT` : '—'}</strong>
+            </div>
+            <div className="kv">
+              <span>Submitted</span>
+              <strong>{formatWhen(selected.created_at)}</strong>
+            </div>
+            {selected.reviewed_at ? (
+              <div className="kv">
+                <span>Reviewed</span>
+                <strong>{formatWhen(selected.reviewed_at)}</strong>
+              </div>
+            ) : null}
+            {selected.status === 'pending' && selected.verification_attempts > 0 ? (
+              <div className="kv span">
+                <span>Verification</span>
+                <strong>
+                  {selected.verification_attempts}/4
+                  {selected.verification_note ? ` · ${selected.verification_note}` : ''}
+                </strong>
+              </div>
+            ) : null}
+            <div className="kv span">
+              <span>Sent to</span>
+              <strong className="mono">{selected.deposit_to_address || '—'}</strong>
+            </div>
+            <div className="kv span">
+              <span>Transaction hash</span>
+              <strong className="mono">
+                {selected.explorer_url ? (
+                  <a href={selected.explorer_url} target="_blank" rel="noreferrer">{selected.deposit_tx_hash}</a>
+                ) : (
+                  selected.deposit_tx_hash || '—'
+                )}
+              </strong>
+            </div>
+            {selected.failure_reason ? (
+              <div className="kv span">
+                <span>Note</span>
+                <strong>{selected.failure_reason}</strong>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+      </Modal>
     </div>
   );
 }
